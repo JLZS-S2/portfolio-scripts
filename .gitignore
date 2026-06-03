@@ -222,8 +222,8 @@ __marimo__/
 # Resultados gerados pelos scripts
 result/
 
-# Ambiente virtual (já está coberto, mas reforço)
+# Ambiente virtual (Reforço)
 venv/
 
-# Arquivo de variáveis de ambiente (weather API)
+# Arquivo de variáveis de ambiente (API)
 .env

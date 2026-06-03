@@ -89,7 +89,7 @@ JSON Report:
 }
 ```
 
-TXT Report
+TXT Report:
 
 ```text
 Report - JSON to CSV Automation

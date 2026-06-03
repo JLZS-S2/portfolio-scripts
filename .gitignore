@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Custom rules for portfolio-scripts ---
+
+# Resultados gerados pelos scripts
+result/
+
+# Ambiente virtual (já está coberto, mas reforço)
+venv/
+
+# Arquivo de variáveis de ambiente (weather API)
+.env

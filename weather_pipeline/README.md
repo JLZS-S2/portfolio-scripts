@@ -157,6 +157,4 @@ This project is ideal for:
 - **API limits**: OpenWeather has rate limits; batch requests may require delays.  
 - **Encoding**: UTF-8 is enforced for reports and outputs.  
 - **Exit codes**: currently not differentiated. Adding `sys.exit(0/1)` improves CI/CD integration.  
-```
-
 ---

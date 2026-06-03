@@ -1,0 +1,4 @@
+Another file here
+KEY
+DATA
+More content to split

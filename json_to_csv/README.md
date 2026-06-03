@@ -71,7 +71,7 @@ Logging options:
 
 ---
 
-##📊 Example Output
+## 📊 Example Output
 JSON Report:
 ```json
 {

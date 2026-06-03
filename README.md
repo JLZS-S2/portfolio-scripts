@@ -40,12 +40,12 @@ Para uso detalhado, consulte o README dentro de cada pasta do projeto.
 
 ---
 
-📬 Contact | Contato
+📬 Contact | Contato:
 Email: joaolzss604@gmail.com
 
 ---
 
-📜 License | Licença
+📜 License | Licença:
 This repository is licensed under the MIT License.
 You are free to use, modify, and distribute the code with proper attribution.
 

@@ -1,8 +1,0 @@
-Hello world
-
-This is a sample text.
-DATA
-We need to split here.
-DATA
-Another section starts here.
-WORD

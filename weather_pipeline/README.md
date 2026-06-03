@@ -26,9 +26,9 @@ The pipeline organizes results into a dedicated `result/` folder and includes st
 - Python 3.12+  
 - Dependencies listed in `requirements.txt`  
 - `.env` file with:  
-  ```
-  API_KEY=your_openweather_api_key
-  ```
+```
+API_KEY=your_openweather_api_key
+```
 
 Install dependencies:
 ```bash

@@ -1,4 +1,3 @@
-```markdown
 # Weather Data Pipeline (API Integration)
 
 ## 📌 Overview  
@@ -161,4 +160,3 @@ This project is ideal for:
 ```
 
 ---
-```

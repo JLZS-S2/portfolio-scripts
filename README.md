@@ -15,7 +15,9 @@ Todos os exemplos são limpos, documentados e pensados para uso real.
 - **weather_pipeline/** → Weather data pipeline project | Pipeline de dados meteorológicos  
 - **file_automation/** → File organization and automation project | Automação e organização de arquivos  
 - **merge_filter_csv/** → CSV merge and dynamic filtering project | Mesclagem e filtragem dinâmica de CSV  
-- **json_to_csv/** → Validates, concatenates, and converts JSON to CSV | Valida, concatena e converte JSON para CSV  
+- **json_to_csv/** → Validates, concatenates, and converts JSON to CSV | Valida, concatena e converte JSON para CSV
+- **cv_to_sqlite** → Validates, concatenates, handles nulls and duplicates, and converts to SQLite | Valida, concatena, trata de nulos e duplicatas e converte para SQLite
+- **pdf_to_csv** → Extracts texts and tables, concatenates, handles null values, and converts PDF to CSV | Extrai textos e tabelas, concatena, trata de valores nulos e converte PDF para CSV
 
 Each folder includes its own README with detailed instructions and usage examples.  
 Cada pasta possui seu próprio README com instruções detalhadas e exemplos de uso.

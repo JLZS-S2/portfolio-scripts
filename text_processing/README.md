@@ -1,79 +1,84 @@
 # Text Processing Automation
 
-## 📌 Overview  
-This project automates the cleaning and processing of text files.  
-It removes blank lines, splits content by multiple keywords, counts lines and words, and generates structured reports in JSON and/or TXT formats.  
-The pipeline organizes results into a dedicated `results/` folder and includes structured logging for error tracking and execution flow.
+## 📌 Visão Geral  
+Este projeto automatiza a limpeza e o processamento de arquivos **TXT**.  
+Ele remove linhas em branco, divide o conteúdo por múltiplas palavras-chave, conta linhas e palavras e gera relatórios estruturados em **JSON** e/ou **TXT**.  
+O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs estruturados para rastrear erros e o fluxo de execução.
 
-👉 In short: you provide TXT files, it gives you cleaned, split files plus reports.
-
----
-
-## 🚀 Features
-- Automatic blank line removal  
-- Keyword-based text splitting (supports multiple keywords)  
-- Line and word counting per file  
-- JSON and TXT report generation  
-- Structured logging with rotating log files (JSON or TXT)  
-- Organized output in a `results/` folder  
-- Encoding detection with **chardet**  
-- Error tracking with detailed failed file list  
+👉 Em resumo: você fornece arquivos TXT e recebe arquivos limpos/divididos mais relatórios.
 
 ---
 
-## 📋 Requirements
+## 🚀 Funcionalidades
+- Remoção automática de linhas em branco  
+- Divisão de texto por palavras-chave (suporta múltiplas)  
+- Contagem de linhas e palavras por arquivo  
+- Geração de relatórios em JSON e TXT  
+- Logging estruturado com arquivos rotativos (JSON ou TXT)  
+- Saída organizada na pasta `result/`  
+- Detecção de codificação com **chardet**  
+- Rastreamento de erros com lista detalhada de arquivos que falharam  
+
+---
+
+## 📋 Requisitos
 - Python 3.12+  
-- Dependencies listed in `requirements.txt`  
+- Dependências listadas em `requirements.txt`  
 
-Install dependencies:
+Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 📂 Project Structure
+## 📂 Estrutura do Projeto
 ```
 text_processing/
-├── text_processing.py
-├── logging_config.py
-├── logging.txt.py
-├── logging_config.json
+├── scripts/
+│   ├── text_processing.py
+│   ├── logging_config.py
+│   ├── logging_txt.py
+│   └── logging_config.json
 ├── requirements.txt
-├── sample1.txt
-├── sample2.txt
-└── result/
-    ├── report.json
-    ├── report.txt
-    ├── cleaned_files/
-    │   ├── new_sample1.txt
-    │   └── new_sample2.txt
-    ├── process_txt.log
-    └── errors_txt.log
+├── ENTRADA/
+│   ├── sample1.txt
+│   └── sample2.txt
+├── result/
+│   ├── report.json
+│   ├── report.txt
+│   ├── cleaned_files/
+│   │   ├── new_sample1.txt
+│   │   └── new_sample2.txt
+│   ├── process_txt.log
+│   └── errors_txt.log
+├── launcher.py
+├── run_pipeline.bat
+└── LEIAME.txt
 ```
 
 ---
 
-## ⚙️ How to Run
-Single file:
+## ⚙️ Como Executar
+Arquivo único:
 ```bash
-python text_processing.py --file sample1 --keywords DATA WORD --json --txt
+python scripts/text_processing.py --file sample1 --keywords DATA WORD --json --txt
 ```
 
-Multiple files:
+Múltiplos arquivos:
 ```bash
-python text_processing.py --file sample1 sample2 --keywords DATA KEY --txt
+python scripts/text_processing.py --file sample1 sample2 --keywords DATA KEY --txt
 ```
 
-Logging options:
-- `--log_json` → structured JSON logs  
-- `--log_txt` → plain text logs (default)  
+Opções de logging:
+- `--log_json` → logs estruturados em JSON  
+- `--log_txt` → logs em texto simples (default)  
 
 ---
 
-## 📊 Example Output
+## 📊 Exemplo de Saída
 
-**JSON Report**
+**Relatório JSON**
 ```json
 {
   "report_title": "Report - Text Processing Automation",
@@ -97,7 +102,7 @@ Logging options:
 }
 ```
 
-**TXT Report**
+**Relatório TXT**
 ```text
 Report - Text Processing Automation
 Date: 01/06/2026 21:30:00
@@ -121,49 +126,49 @@ Notes:
 
 ---
 
-## 🧠 Internal Functions (for developers)
-- `clean_text()` → Removes blank lines and detects encoding  
-- `split_keywords()` → Splits text using multiple keywords  
-- `count_lines_words()` → Counts lines and words per file  
-- `generate_report()` → Creates JSON/TXT reports  
-- `save_results()` → Moves results and logs to `results/` folder  
-- `main()` → Controls execution pipeline  
+## 🧠 Funções Internas (para desenvolvedores)
+- `clean_text()` → Remove linhas em branco e detecta encoding  
+- `split_keywords()` → Divide texto usando múltiplas palavras-chave  
+- `count_lines_words()` → Conta linhas e palavras por arquivo  
+- `generate_report()` → Cria relatórios em JSON/TXT  
+- `save_results()` → Move resultados e logs para a pasta `result/`  
+- `main()` → Controla o pipeline de execução  
 
 ---
 
-## 🔒 Error Handling
-- Detects encoding errors with **chardet**  
-- Handles invalid or unreadable TXT files  
-- Tracks failed files with detailed logging  
-- Structured error logs (`errors_json.log` or `errors_txt.log`)  
-- Critical logging when all files fail  
+## 🔒 Tratamento de Erros
+- Detecta erros de codificação com **chardet**  
+- Lida com arquivos TXT inválidos ou ilegíveis  
+- Rastreia arquivos que falharam com logging detalhado  
+- Logs estruturados (`errors_json.log` ou `errors_txt.log`)  
+- Logging crítico quando todos os arquivos falham  
 
 ---
 
-## 📌 Technologies Used
+## 📌 Tecnologias Utilizadas
 - Python 3.12.7  
 - Argparse  
 - Logging / RotatingFileHandler  
 - JSON / Regex  
-- Chardet for encoding detection  
+- Chardet para detecção de encoding  
 - python-json-logger  
 
 ---
 
-## ✅ Final Result  
-This project is ideal for:
-- Text automation  
-- Batch TXT processing  
-- Data cleaning  
-- Report generation  
-- Error-tracked pipelines  
+## ✅ Resultado Final  
+Este projeto é ideal para:
+- Automação de processamento de texto  
+- Processamento em lote de arquivos TXT  
+- Limpeza de dados  
+- Geração de relatórios  
+- Pipelines com rastreamento de erros  
 
 ---
 
-## 🔎 Observations & Recommendations
-- **save_results**: overwrites files if they already exist in `results/`. Add timestamps if versioning is needed.  
-- **Keywords**: ensure they are chosen carefully to avoid excessive splitting.  
-- **Encoding detection**: may be imprecise for very small files.  
-- **Exit codes**: currently not differentiated. Adding `sys.exit(0/1)` improves CI/CD integration.  
+## 🔎 Observações & Recomendações
+- **save_results**: sobrescreve arquivos se já existirem em `result/`. Adicione timestamps se precisar de versionamento.  
+- **Palavras-chave**: escolha com cuidado para evitar divisões excessivas.  
+- **Detecção de encoding**: pode ser imprecisa em arquivos muito pequenos.  
+- **Exit codes**: atualmente não diferenciados. Adicionar `sys.exit(0/1)` melhora integração com CI/CD.  
 
 ---

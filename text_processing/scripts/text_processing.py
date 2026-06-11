@@ -10,27 +10,31 @@ from logging import Logger, Handler
 from logging_config import setup_logging
 from logging_txt import logging_txt
 from datetime import datetime
+import logging
 
 logger: Logger | None = None
 
 
 def clean_text(files: List[str]) -> Dict[str, Any]:
     """Remove blank lines and generate new files prefixed with 'new_'."""
+    logger.info("Starting cleaning process for %d file(s)", len(files))
     all_info: List[str] = []
     failed_list: List[str] = []
     failures: int = 0
 
     for file in files:
+        logger.debug("Processing file: %s", file)
         try:
             with open(file, "rb") as f:
                 raw_data = f.read(10000)
             result = chardet.detect(raw_data)
             encoding: str | None = result.get("encoding")
+            logger.debug("Detected encoding for %s: %s", file, encoding)
 
             with open(file, "r", encoding=encoding) as f:
                 text = f.read()
             cleaned_text = re.sub(r"\n\s*\n", "\n", text)
-            new_file = "new_" + file
+            new_file = "new_" + os.path.basename(file)
             with open(new_file, "w", encoding="utf-8") as f:
                 f.write(cleaned_text)
                 all_info.append(new_file)
@@ -40,6 +44,8 @@ def clean_text(files: List[str]) -> Dict[str, Any]:
             failures += 1
             failed_list.append(file)
             continue
+
+    logger.info("Cleaning completed: %d success(es), %d failure(s)", len(all_info), failures)
 
     if failures == len(files):
         logger.critical("All files failed.")
@@ -53,6 +59,7 @@ def clean_text(files: List[str]) -> Dict[str, Any]:
 
 def split_keywords(keywords: List[str], files: List[str]) -> List[str]:
     """Split text using multiple keywords."""
+    logger.info("Splitting files using keywords: %s", keywords)
     keyword = "|".join(re.escape(k) for k in keywords)
     split_files: List[str] = []
     for file in files:
@@ -66,11 +73,13 @@ def split_keywords(keywords: List[str], files: List[str]) -> List[str]:
         split_files.append(file)
         logger.info("Keywords '%s' applied to file %s", keyword, file)
 
+    logger.info("Keyword splitting completed for %d file(s)", len(split_files))
     return split_files
 
 
 def count_lines_words(files: List[str]) -> Dict[str, Dict[str, int]]:
     """Count lines and words in each file."""
+    logger.info("Starting line and word count for %d file(s)", len(files))
     all_info: Dict[str, Dict[str, int]] = {}
     for file in files:
         with open(file, "r", encoding="utf-8") as f:
@@ -85,6 +94,7 @@ def count_lines_words(files: List[str]) -> Dict[str, Dict[str, int]]:
 def generate_report(report_data: Dict[str, Dict[str, int]], summary: Dict[str, Any],
                     execution_time: float, json_file: bool = False, txt_file: bool = False) -> None:
     """Generate report in JSON and/or TXT."""
+    logger.info("Generating report...")
     current_date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
     final_report: Dict[str, Any] = {
@@ -126,6 +136,7 @@ def generate_report(report_data: Dict[str, Dict[str, int]], summary: Dict[str, A
 
 def save_results(files: List[str], reports: List[str]) -> None:
     """Move processed files and reports into organized folders."""
+    logger.info("Moving results to 'result' folder...")
     if os.path.exists("process_json.log"):
         log: List[str] = ["process_json.log", "errors_json.log"]
     elif os.path.exists("process_txt.log"):
@@ -140,14 +151,20 @@ def save_results(files: List[str], reports: List[str]) -> None:
 
     for report in reports + log:
         if os.path.exists(report):
-            shutil.move(report, os.path.join(destination, report))
+            shutil.move(report, os.path.join(destination, os.path.basename(report)))
+            logger.info("Report/log moved: %s", report)
 
     for file in files:
         if os.path.exists(file):
-            shutil.move(file, os.path.join(subfolder, file))
+            shutil.move(file, os.path.join(subfolder, os.path.basename(file)))
+            logger.info("File moved: %s", file)
+
+    print("- All results have been moved.")
 
 
 def main() -> None:
+    global logger
+
     start_time = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", required=True, nargs="+", help="TXT files to process")
@@ -158,15 +175,17 @@ def main() -> None:
     parser.add_argument("--log_txt", action="store_true", help="Generate TXT log")
     args = parser.parse_args()
 
-    global logger
     handlers: List[Handler] = []
-
     if args.log_json and not args.log_txt:
         logger = setup_logging(logger_name="Text Processing Automation")
+        logger.info("Logger initialized in JSON mode.")
     else:
         logger, handlers = logging_txt()
+        logger.info("Logger initialized in TXT mode.")
 
     args.file = [f if f.endswith(".txt") else f + ".txt" for f in args.file]
+    logger.debug("Files to process: %s", args.file)
+    logger.debug("Keywords to apply: %s", args.keywords)
 
     formatted_files = clean_text(args.file)
     if formatted_files["status"] == "OK":
@@ -186,18 +205,10 @@ def main() -> None:
         }
 
     execution_time = time.time() - start_time
+    logger.info("Pipeline execution finished in %.2f seconds.", execution_time)
     generate_report(stats, summary, execution_time, json_file=args.json, txt_file=args.txt)
 
-    # Close handlers
-    for handler in handlers[:]:
-        handler.flush()
-        handler.close()
-        logger.removeHandler(handler)
-    for h in logger.handlers[:]:
-        h.flush()
-        h.close()
-        logger.removeHandler(h)
-
+    reports: List[str] = []
     if args.json and args.txt:
         reports = ["report.json", "report.txt"]
     elif args.json:
@@ -205,11 +216,27 @@ def main() -> None:
     else:
         reports = ["report.txt"]
 
-    files_to_move = stats.keys() if stats else []
-    save_results(list(files_to_move), reports)
+    logging.shutdown()
+    for h in logger.handlers[:]:
+        logger.removeHandler(h)
+        try:
+            h.close()
+        except Exception:
+            pass
+    for handler in handlers[:]:
+        try:
+            handler.flush()
+            handler.close()
+        except Exception:
+            pass
+        logger.removeHandler(handler)
 
-    logger.info("Execution finished")
+    files_to_move = list(stats.keys()) if stats else []
+    save_results(files_to_move, reports)
+
+    print("Pipeline completed successfully.")
 
 
 if __name__ == "__main__":
     main()
+

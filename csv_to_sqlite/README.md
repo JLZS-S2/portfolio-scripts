@@ -1,38 +1,38 @@
 # CSV to SQLite Pipeline
 
-## 📌 Overview  
-This project automates the validation, cleaning, and import of CSV files into SQLite databases.  
-It detects encoding, removes duplicates, handles missing values, and generates structured reports in JSON and/or TXT formats.  
-The pipeline organizes results into a dedicated `result/` folder and includes structured logging for error tracking and execution flow.
+## 📌 Visão Geral  
+Este projeto automatiza a validação, limpeza e importação de arquivos **CSV** em bancos de dados **SQLite**.  
+Ele detecta codificação, remove duplicados, trata valores nulos e gera relatórios estruturados em **JSON** e/ou **TXT**.  
+O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs estruturados para rastrear erros e o fluxo de execução.
 
-👉 In short: you provide CSV files in the `ENTRADA/` folder, it gives you SQLite databases plus reports in `result/`.
-
----
-
-## 🚀 Features
-- Validate and open CSV files with encoding detection (chardet)  
-- Import cleaned data into SQLite databases  
-- Remove duplicates and replace null values with `"Not Informed"` (default)  
-- JSON and TXT report generation  
-- Structured logging with JSON or TXT format  
-- Organized output in a `result/` folder  
-- Error tracking with detailed failed file list  
-- Interactive launcher (`launcher.py`) and `.bat` script for easy execution  
+👉 Em resumo: você coloca arquivos CSV na pasta `ENTRADA/`, e recebe bancos SQLite mais relatórios na pasta `result/`.
 
 ---
 
-## 📋 Requirements
+## 🚀 Funcionalidades
+- Validação e abertura de arquivos CSV com detecção de codificação (**chardet**)  
+- Importação de dados limpos para bancos SQLite  
+- Remoção de duplicados e substituição de valores nulos por `"Not Informed"` (padrão)  
+- Geração de relatórios em JSON e TXT  
+- Logging estruturado em formato JSON ou TXT  
+- Organização automática dos resultados na pasta `result/`  
+- Rastreamento de erros com lista detalhada de arquivos que falharam  
+- Launcher interativo (`launcher.py`) e script `.bat` para execução fácil  
+
+---
+
+## 📋 Requisitos
 - Python 3.12+  
-- Dependencies listed in `requirements.txt`  
+- Dependências listadas em `requirements.txt`  
 
-Install dependencies:
+Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 📂 Project Structure
+## 📂 Estrutura do Projeto
 ```
 csv_to_sqlite/
 ├── scripts/
@@ -57,20 +57,20 @@ csv_to_sqlite/
 
 ---
 
-## ⚙️ How to Run
-1. Place your CSV files inside the `ENTRADA/` folder.  
-2. Double-click `run_pipeline.bat`.  
-3. The launcher will ask for optional customization:
-   - Replacement for missing values (default: `"Not Informed"`)  
-   - Report type (`txt` default, or `json`)  
-   - Log type (`txt` default, or `json`)  
-   - If you just press **Enter**, defaults are used.  
+## ⚙️ Como Executar
+1. Coloque seus arquivos CSV dentro da pasta `ENTRADA/`.  
+2. Dê duplo clique em `run_pipeline.bat`.  
+3. O launcher pedirá opções de personalização:
+   - Valor para substituir nulos (padrão: `"Not Informed"`)  
+   - Tipo de relatório (`txt` padrão, ou `json`)  
+   - Tipo de log (`txt` padrão, ou `json`)  
+   - Se você apenas apertar **Enter**, os valores padrão serão usados.  
 
 ---
 
-## 📊 Example Output
+## 📊 Exemplo de Saída
 
-**JSON Report**
+**Relatório JSON**
 ```json
 {
   "report_title": "Report - CSV to SQLite",
@@ -92,7 +92,7 @@ csv_to_sqlite/
 }
 ```
 
-**TXT Report**
+**Relatório TXT**
 ```text
 Report - CSV to SQLite
 Date: 11/06/2026 11:30:00
@@ -114,48 +114,50 @@ Notes:
 
 ---
 
-## 🧠 Internal Functions (for developers)
-- `open_input()` → Validates and opens CSV files with encoding detection  
-- `duplicates_and_nulls()` → Removes duplicates and fills missing values  
-- `generate_report()` → Creates JSON/TXT reports (now serializes NumPy types safely)  
-- `save_results()` → Moves DBs, reports, and logs to `result/` folder  
-- `main()` → Controls execution pipeline  
+## 🧠 Funções Internas (para desenvolvedores)
+- `open_input()` → Valida e abre arquivos CSV com detecção de codificação  
+- `duplicates_and_nulls()` → Remove duplicados e preenche valores nulos  
+- `generate_report()` → Cria relatórios em JSON/TXT  
+- `save_results()` → Move bancos, relatórios e logs para a pasta `result/`  
+- `main()` → Controla o pipeline de execução  
 
 ---
 
-## 🔒 Error Handling
-- Detects missing or invalid CSV files  
-- Handles encoding errors gracefully  
-- Tracks failed files with detailed logging  
-- Structured error logs (`errors_json.log` or `errors_txt.log`)  
-- Critical logging when all files fail  
-- Safe JSON serialization for Pandas/NumPy types  
+## 🔒 Tratamento de Erros
+- Detecta arquivos CSV ausentes ou inválidos  
+- Lida com erros de codificação de forma segura  
+- Rastreia arquivos que falharam com logging detalhado  
+- Logs estruturados (`errors_json.log` ou `errors_txt.log`)  
+- Logging crítico quando todos os arquivos falham  
+- Serialização segura de tipos Pandas/NumPy em JSON  
 
 ---
 
-## 📌 Technologies Used
+## 📌 Tecnologias Utilizadas
 - Python 3.12.7  
 - Pandas  
 - SQLite3  
 - Argparse  
-- Chardet for encoding detection  
+- Chardet para detecção de encoding  
 - Logging / JSON logger  
 
 ---
 
-## ✅ Final Result  
-This project is ideal for:
-- CSV validation and cleaning  
-- Automated database creation  
-- Data preprocessing pipelines  
-- Report automation  
-- Error-tracked batch processing  
+## ✅ Resultado Final  
+Este projeto é ideal para:
+- Validação e limpeza de CSVs  
+- Criação automatizada de bancos de dados  
+- Pipelines de pré-processamento de dados  
+- Automação de relatórios  
+- Processamento em lote com rastreamento de erros  
 
 ---
 
-## 🔎 Observations & Recommendations
-- **save_results**: overwrites files if they already exist in `result/`. Add timestamps if versioning is needed.  
-- **Encoding detection**: may be imprecise for very small files.  
-- **Duplicates**: removed automatically; adjust if you want to keep them.  
-- **Defaults**: pressing Enter in the launcher uses `"Not Informed"` for nulls, TXT for reports, TXT for logs.  
-- **Exit codes**: currently not differentiated. Adding `sys.exit(0/1)` improves CI/CD integration.  
+## 🔎 Observações & Recomendações
+- **save_results**: sobrescreve arquivos se já existirem em `result/`. Adicione timestamps se precisar de versionamento.  
+- **Detecção de encoding**: pode ser imprecisa em arquivos muito pequenos.  
+- **Duplicados**: removidos automaticamente; ajuste se quiser mantê-los.  
+- **Defaults**: apertar Enter no launcher usa `"Not Informed"` para nulos, TXT para relatórios e TXT para logs.  
+- **Exit codes**: atualmente não diferenciados. Adicionar `sys.exit(0/1)` melhora integração com CI/CD.  
+
+---

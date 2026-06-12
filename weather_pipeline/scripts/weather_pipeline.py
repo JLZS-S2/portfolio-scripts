@@ -204,7 +204,6 @@ def main() -> None:
     if args.txt or (not args.json and not args.txt):
         reports.append("report.txt")
 
-    # Fechar handlers
     logging.shutdown()
     for h in logger.handlers[:]:
         logger.removeHandler(h)
@@ -220,7 +219,6 @@ def main() -> None:
             pass
         logger.removeHandler(handler)
 
-    # Salvar resultados
     output_files = [csv_file, json_file]
     save_results(output_files, reports)
     print("Pipeline completed successfully.")

@@ -1,0 +1,6 @@
+{
+  "filters": [
+    { "column": "Country", "operator": "==", "value": "Brazil" },
+    { "column": "Age", "operator": ">", "value": 25 }
+  ]
+}

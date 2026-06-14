@@ -1,5 +1,3 @@
----
-
 # CSV to SQLite Pipeline
 
 ## 📌 Visão Geral  

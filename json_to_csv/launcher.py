@@ -1,60 +1,91 @@
-import subprocess
 import os
+import subprocess
+
+def listar_arquivos(extensao: str):
+    entrada = "ENTRADA"
+    arquivos = [f for f in os.listdir(entrada) if f.lower().endswith(extensao)]
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
+    return arquivos
+
+def escolher_opcao(opcoes, mensagem, padrao=None):
+    print("\n" + mensagem)
+    for i, opcao in enumerate(opcoes, 1):
+        print(f"{i}. {opcao}")
+    escolha = input("Digite o número da opção desejada: ").strip()
+    try:
+        idx = int(escolha) - 1
+        if 0 <= idx < len(opcoes):
+            return opcoes[idx]
+    except ValueError:
+        pass
+    print(f"⚠️ Opção inválida. Usando padrão: {padrao or opcoes[0]}")
+    return padrao or opcoes[0]
 
 def main():
-    print("=== JSON TO CSV AUTOMATION ===")
-    print("Este menu ajuda você a configurar a execução sem precisar editar arquivos.")
-    print()
+    print("========================================")
+    print("JSON TO CSV AUTOMATION - MENU INTERATIVO")
+    print("========================================\n")
 
-    # Lista todos os arquivos JSON da pasta ENTRADA
-    input_folder = "ENTRADA"
-    if not os.path.exists(input_folder):
-        print("❌ ERRO: Pasta ENTRADA não encontrada.")
-        print("Crie a pasta ENTRADA e coloque seus arquivos JSON lá.")
+    # Extensão fixa: JSON
+    extensao = ".json"
+    arquivos = listar_arquivos(extensao)
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
         return
 
-    input_files = [os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(".json")]
+    print(f"Arquivos disponíveis em ENTRADA ({extensao}):")
+    for i, f in enumerate(arquivos, 1):
+        print(f"{i}. {f}")
 
-    if not input_files:
-        print("❌ Nenhum arquivo JSON encontrado na pasta ENTRADA.")
+    selecionados = input("Digite os números dos arquivos a processar (separados por espaço): ").split()
+    escolhidos = []
+    for s in selecionados:
+        try:
+            idx = int(s) - 1
+            if 0 <= idx < len(arquivos):
+                escolhidos.append(os.path.join("ENTRADA", arquivos[idx]))
+        except ValueError:
+            continue
+
+    if not escolhidos:
+        print("⚠️ Nenhum arquivo válido selecionado. Encerrando.")
         return
 
-    # Inputs opcionais: se o cliente só apertar Enter, usa o valor padrão
-    output_csv = input("Nome do arquivo CSV de saída [Merge.csv]: ") or "Merge.csv"
-    report_type = input("Tipo de relatório (txt/json) [txt]: ").strip().lower() or "txt"
-    log_type = input("Tipo de log (txt/json) [txt]: ").strip().lower() or "txt"
-    null_value = input("Valor para substituir nulos [Not Informed]: ") or "Not Informed"
+    # Nome do arquivo de saída
+    output_file = input("\nDigite o nome do arquivo CSV de saída [Merge.csv]: ").strip() or "Merge.csv"
 
-    # Resumo antes da execução
-    print("\nResumo da execução:")
-    print(f"- Arquivos JSON: {len(input_files)} encontrados")
-    print(f"- Saída CSV: {output_csv}")
-    print(f"- Relatório: {report_type}")
-    print(f"- Log: {log_type}")
-    print(f"- Substituição de nulos: {null_value}")
-    print()
+    # Substituição de valores nulos
+    null_replacement = input("Digite a string para substituir valores nulos [Not Informed]: ").strip() or "Not Informed"
 
-    args = [
-        "python", "scripts/json_to_csv.py",
-        "--json_files", *input_files,
-        "--output_csv", output_csv,
-        "--for_NaN", null_value
-    ]
-
-    if report_type == "json":
-        args.append("--json")
+    # Tipo de relatório
+    relatorio = escolher_opcao(["TXT", "JSON", "Ambos"], "Escolha o tipo de relatório:", "TXT")
+    if relatorio == "TXT":
+        report_flags = "--txt"
+    elif relatorio == "JSON":
+        report_flags = "--json"
     else:
-        args.append("--txt")
+        report_flags = "--txt --json"
 
-    if log_type == "json":
-        args.append("--log_json")
-    else:
-        args.append("--log_txt")
+    # Tipo de log
+    log = escolher_opcao(["TXT", "JSON"], "Escolha o tipo de log:", "TXT")
+    log_flag = "--log_json" if log == "JSON" else "--log_txt"
 
-    print("Executando pipeline...")
-    subprocess.run(args)
+    # Resumo das escolhas
+    print("\n========================================")
+    print("RESUMO DAS ESCOLHAS")
+    print("========================================")
+    print(f"Arquivos selecionados: {', '.join([os.path.basename(f) for f in escolhidos])}")
+    print(f"Arquivo de saída: {output_file}")
+    print(f"Substituição de nulos: {null_replacement}")
+    print(f"Relatório: {relatorio}")
+    print(f"Log: {log}")
+    print("========================================\n")
 
-    print("\n✅ Concluído! Verifique a pasta result/")
+    # Montar comando
+    cmd = f'python scripts/json_to_csv.py --json_files {" ".join(escolhidos)} --output_csv "{output_file}" --for_NaN "{null_replacement}" {report_flags} {log_flag}'
+    print("🚀 Executando comando:\n", cmd, "\n")
+    subprocess.run(cmd, shell=True)
 
 if __name__ == "__main__":
     main()

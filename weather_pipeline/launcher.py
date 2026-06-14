@@ -1,73 +1,87 @@
 import os
 import subprocess
 
+def listar_arquivos(extensao: str):
+    entrada = "ENTRADA"
+    arquivos = [f for f in os.listdir(entrada) if f.lower().endswith(extensao)]
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
+    return arquivos
+
+def escolher_opcao(opcoes, mensagem, padrao=None):
+    print("\n" + mensagem)
+    for i, opcao in enumerate(opcoes, 1):
+        print(f"{i}. {opcao}")
+    escolha = input("Digite o número da opção desejada: ").strip()
+    try:
+        idx = int(escolha) - 1
+        if 0 <= idx < len(opcoes):
+            return opcoes[idx]
+    except ValueError:
+        pass
+    print(f"⚠️ Opção inválida. Usando padrão: {padrao or opcoes[0]}")
+    return padrao or opcoes[0]
+
 def main():
-    print("=== WEATHER DATA PIPELINE ===")
-    print("Este menu ajuda você a configurar a execução sem precisar editar arquivos.")
-    print()
+    print("========================================")
+    print("WEATHER DATA PIPELINE - MENU INTERATIVO")
+    print("========================================\n")
 
-    # Verifica se a pasta ENTRADA existe
-    input_folder = "ENTRADA"
-    if not os.path.exists(input_folder):
-        print("❌ ERRO: Pasta ENTRADA não encontrada.")
-        print("Crie a pasta ENTRADA e coloque seu arquivo TXT com nomes de cidades lá.")
+    # Extensão fixa: TXT
+    extensao = ".txt"
+    arquivos = listar_arquivos(extensao)
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
         return
 
-    # Lista arquivos TXT disponíveis
-    input_files = [f for f in os.listdir(input_folder) if f.lower().endswith(".txt")]
-    if not input_files:
-        print("❌ Nenhum arquivo TXT encontrado na pasta ENTRADA.")
-        return
-
-    print("Arquivos disponíveis na pasta ENTRADA:")
-    for i, f in enumerate(input_files, 1):
+    print(f"Arquivos disponíveis em ENTRADA ({extensao}):")
+    for i, f in enumerate(arquivos, 1):
         print(f"{i}. {f}")
 
-    choice = input("\nDigite o número do arquivo que deseja usar: ").strip()
+    escolha = input("Digite o número do arquivo a processar: ").strip()
     try:
-        file_choice = input_files[int(choice) - 1]
-    except (ValueError, IndexError):
-        print("❌ Escolha inválida.")
+        idx = int(escolha) - 1
+        if 0 <= idx < len(arquivos):
+            file_path = os.path.join("ENTRADA", arquivos[idx])
+        else:
+            print("⚠️ Escolha inválida. Encerrando.")
+            return
+    except ValueError:
+        print("⚠️ Escolha inválida. Encerrando.")
         return
 
-    file_path = os.path.join(input_folder, file_choice)
+    # Nomes dos arquivos de saída
+    csv_name = input("\nDigite o nome do arquivo CSV de saída [Data.csv]: ").strip() or "Data.csv"
+    json_name = input("Digite o nome do arquivo JSON de saída [Data.json]: ").strip() or "Data.json"
 
-    # Pergunta nomes dos arquivos de saída
-    csv_name = input("Nome do arquivo CSV de saída [Data.csv]: ").strip() or "Data.csv"
-    json_name = input("Nome do arquivo JSON de saída [Data.json]: ").strip() or "Data.json"
-
-    # Pergunta tipo de relatório
-    report_type = input("Tipo de relatório (txt/json) [txt]: ").strip().lower() or "txt"
-    log_type = input("Tipo de log (txt/json) [txt]: ").strip().lower() or "txt"
-
-    # Resumo antes da execução
-    print("\nResumo da execução:")
-    print(f"- Arquivo de cidades: {file_choice}")
-    print(f"- Saída CSV: {csv_name}")
-    print(f"- Saída JSON: {json_name}")
-    print(f"- Relatório: {report_type}")
-    print(f"- Log: {log_type}")
-    print()
-
-    args = [
-        "python", "scripts/weather_pipeline.py",
-        "--file_content", file_path,
-        "--file_csv", csv_name,
-        "--file_json", json_name
-    ]
-
-    if report_type == "json":
-        args.append("--json")
+    # Tipo de relatório
+    relatorio = escolher_opcao(["TXT", "JSON", "Ambos"], "Escolha o tipo de relatório:", "TXT")
+    if relatorio == "TXT":
+        report_flags = "--txt"
+    elif relatorio == "JSON":
+        report_flags = "--json"
     else:
-        args.append("--txt")
+        report_flags = "--txt --json"
 
-    if log_type == "json":
-        args.append("--log_json")
-    else:
-        args.append("--log_txt")
+    # Tipo de log
+    log = escolher_opcao(["TXT", "JSON"], "Escolha o tipo de log:", "TXT")
+    log_flag = "--log_json" if log == "JSON" else "--log_txt"
 
-    print("Executando pipeline...")
-    subprocess.run(args)
+    # Resumo das escolhas
+    print("\n========================================")
+    print("RESUMO DAS ESCOLHAS")
+    print("========================================")
+    print(f"Arquivo de cidades: {os.path.basename(file_path)}")
+    print(f"Saída CSV: {csv_name}")
+    print(f"Saída JSON: {json_name}")
+    print(f"Relatório: {relatorio}")
+    print(f"Log: {log}")
+    print("========================================\n")
+
+    # Montar comando
+    cmd = f'python scripts/weather_pipeline.py --file_content "{file_path}" --file_csv "{csv_name}" --file_json "{json_name}" {report_flags} {log_flag}'
+    print("🚀 Executando comando:\n", cmd, "\n")
+    subprocess.run(cmd, shell=True)
 
     print("\n✅ Concluído! Verifique a pasta result/")
 

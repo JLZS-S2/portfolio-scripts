@@ -1,55 +1,87 @@
 import os
 import subprocess
 
+def listar_arquivos(extensao: str):
+    entrada = "ENTRADA"
+    arquivos = [f for f in os.listdir(entrada) if f.lower().endswith(extensao)]
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
+    return arquivos
+
+def escolher_opcao(opcoes, mensagem, padrao=None):
+    print("\n" + mensagem)
+    for i, opcao in enumerate(opcoes, 1):
+        print(f"{i}. {opcao}")
+    escolha = input("Digite o número da opção desejada: ").strip()
+    try:
+        idx = int(escolha) - 1
+        if 0 <= idx < len(opcoes):
+            return opcoes[idx]
+    except ValueError:
+        pass
+    print(f"⚠️ Opção inválida. Usando padrão: {padrao or opcoes[0]}")
+    return padrao or opcoes[0]
+
 def main():
-    print("=== TEXT PROCESSING AUTOMATION ===")
-    print("Este menu ajuda você a configurar a execução sem precisar editar arquivos.")
-    print()
+    print("========================================")
+    print("TEXT PROCESSING AUTOMATION - MENU INTERATIVO")
+    print("========================================\n")
 
-    # Lista todos os arquivos TXT da pasta ENTRADA
-    input_folder = "ENTRADA"
-    if not os.path.exists(input_folder):
-        print("❌ ERRO: Pasta ENTRADA não encontrada.")
-        print("Crie a pasta ENTRADA e coloque seus arquivos TXT lá.")
+    # Extensão fixa: TXT
+    extensao = ".txt"
+    arquivos = listar_arquivos(extensao)
+    if not arquivos:
+        print(f"❌ Nenhum arquivo {extensao} encontrado na pasta ENTRADA.")
         return
 
-    input_files = [os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.lower().endswith(".txt")]
+    print(f"Arquivos disponíveis em ENTRADA ({extensao}):")
+    for i, f in enumerate(arquivos, 1):
+        print(f"{i}. {f}")
 
-    if not input_files:
-        print("❌ Nenhum arquivo TXT encontrado na pasta ENTRADA.")
+    selecionados = input("Digite os números dos arquivos a processar (separados por espaço): ").split()
+    escolhidos = []
+    for s in selecionados:
+        try:
+            idx = int(s) - 1
+            if 0 <= idx < len(arquivos):
+                escolhidos.append(os.path.join("ENTRADA", arquivos[idx]))
+        except ValueError:
+            continue
+
+    if not escolhidos:
+        print("⚠️ Nenhum arquivo válido selecionado. Encerrando.")
         return
 
-    # Inputs opcionais
+    # Palavras-chave
     keywords = input("Digite as palavras-chave para dividir o texto (separadas por espaço): ").split()
-    report_type = input("Tipo de relatório (txt/json) [txt]: ").strip().lower() or "txt"
-    log_type = input("Tipo de log (txt/json) [txt]: ").strip().lower() or "txt"
 
-    # Resumo antes da execução
-    print("\nResumo da execução:")
-    print(f"- Arquivos TXT: {len(input_files)} encontrados")
-    print(f"- Palavras-chave: {', '.join(keywords) if keywords else 'Nenhuma'}")
-    print(f"- Relatório: {report_type}")
-    print(f"- Log: {log_type}")
-    print()
-
-    args = [
-        "python", "scripts/text_processing.py",
-        "--file", *input_files,
-        "--keywords", *keywords
-    ]
-
-    if report_type == "json":
-        args.append("--json")
+    # Tipo de relatório
+    relatorio = escolher_opcao(["TXT", "JSON", "Ambos"], "Escolha o tipo de relatório:", "TXT")
+    if relatorio == "TXT":
+        report_flags = "--txt"
+    elif relatorio == "JSON":
+        report_flags = "--json"
     else:
-        args.append("--txt")
+        report_flags = "--txt --json"
 
-    if log_type == "json":
-        args.append("--log_json")
-    else:
-        args.append("--log_txt")
+    # Tipo de log
+    log = escolher_opcao(["TXT", "JSON"], "Escolha o tipo de log:", "TXT")
+    log_flag = "--log_json" if log == "JSON" else "--log_txt"
 
-    print("Executando pipeline...")
-    subprocess.run(args)
+    # Resumo das escolhas
+    print("\n========================================")
+    print("RESUMO DAS ESCOLHAS")
+    print("========================================")
+    print(f"Arquivos selecionados: {', '.join([os.path.basename(f) for f in escolhidos])}")
+    print(f"Palavras-chave: {', '.join(keywords) if keywords else 'Nenhuma'}")
+    print(f"Relatório: {relatorio}")
+    print(f"Log: {log}")
+    print("========================================\n")
+
+    # Montar comando
+    cmd = f'python scripts/text_processing.py --file {" ".join(escolhidos)} {"--keywords " + " ".join(keywords) if keywords else ""} {report_flags} {log_flag}'
+    print("🚀 Executando comando:\n", cmd, "\n")
+    subprocess.run(cmd, shell=True)
 
     print("\n✅ Concluído! Verifique a pasta result/")
 

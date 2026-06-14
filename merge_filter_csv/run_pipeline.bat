@@ -5,7 +5,7 @@ setlocal enabledelayedexpansion
 :: ========================================================
 :: CONFIGURAÇÃO DO PROJETO
 :: ========================================================
-set "PROJECT_NAME=MERGE ^& FILTER CSV PIPELINE"
+set "PROJECT_NAME=MERGE & FILTER CSV PIPELINE"
 :: ========================================================
 
 title %PROJECT_NAME%
@@ -37,11 +37,12 @@ echo %PROJECT_NAME%
 echo ========================================
 echo.
 
-:: Verifica se a pasta ENTRADA existe
-if not exist "ENTRADA\" (
+:: Verifica se há arquivos CSV na pasta ENTRADA
+dir /b "ENTRADA\*.csv" >nul 2>&1
+if %errorlevel% neq 0 (
     color 0E
-    echo ERRO: Pasta ENTRADA não encontrada.
-    echo Crie a pasta ENTRADA e coloque seus arquivos CSV lá.
+    echo ERRO: Nenhum arquivo CSV encontrado na pasta ENTRADA.
+    echo Coloque pelo menos 2 arquivos CSV na pasta ENTRADA e tente novamente.
     echo.
     pause
     exit /b

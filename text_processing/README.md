@@ -10,19 +10,19 @@ O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs 
 ---
 
 ## 🚀 Funcionalidades
-- Remoção automática de linhas em branco  
-- Divisão de texto por palavras-chave (suporta múltiplas)  
-- Contagem de linhas e palavras por arquivo  
-- Geração de relatórios em JSON e TXT  
-- Logging estruturado com arquivos rotativos (JSON ou TXT)  
-- Saída organizada na pasta `result/`  
-- Detecção de codificação com **chardet**  
-- Rastreamento de erros com lista detalhada de arquivos que falharam  
+- **Remoção** automática de linhas em branco  
+- **Divisão** de texto por palavras-chave (suporta múltiplas)  
+- **Contagem** de linhas e palavras por arquivo  
+- **Relatórios** em JSON e TXT  
+- **Logging estruturado** em TXT ou JSON  
+- **Saída organizada** na pasta `result/`  
+- **Detecção de codificação** com chardet  
+- **Rastreamento de erros** com lista detalhada de falhas  
 
 ---
 
 ## 📋 Requisitos
-- Python 3.12+  
+- Windows com Python 3.12+  
 - Dependências listadas em `requirements.txt`  
 
 Instale as dependências:
@@ -42,16 +42,9 @@ text_processing/
 │   └── logging_config.json
 ├── requirements.txt
 ├── ENTRADA/
-│   ├── sample1.txt
-│   └── sample2.txt
+│   └── (arquivos TXT)
 ├── result/
-│   ├── report.json
-│   ├── report.txt
-│   ├── cleaned_files/
-│   │   ├── new_sample1.txt
-│   │   └── new_sample2.txt
-│   ├── process_txt.log
-│   └── errors_txt.log
+│   └── (saídas geradas)
 ├── launcher.py
 ├── run_pipeline.bat
 └── LEIAME.txt
@@ -59,24 +52,82 @@ text_processing/
 
 ---
 
+## 🔄 Fluxo do Pipeline
+
+```
++-----------+        +----------------+        +-----------+
+|  ENTRADA  | -----> |   PROCESSO     | -----> |  RESULT     |
+| (TXT)     |        | (text_processing)|      | (TXT + logs)|
++-----------+        +----------------+        +-----------+
+
+ENTRADA: pasta já criada e entregue vazia
+PROCESSO: limpeza, divisão por keywords, relatórios, logs
+RESULT: arquivos TXT limpos/divididos + relatórios + logs
+```
+
+⚠️ Observação:  
+- Se a pasta **ENTRADA** estiver **vazia**, o pipeline não roda.  
+- Este pipeline funciona com **um ou mais arquivos TXT**.  
+
+---
+
 ## ⚙️ Como Executar
+
+### Opção 1: Usando o menu interativo (`run_pipeline.bat`)
+1. Coloque seus arquivos TXT dentro da pasta ENTRADA.  
+2. Clique duas vezes em **run_pipeline.bat**.  
+3. O menu interativo será aberto:  
+   - Escolha os arquivos TXT dentro de ENTRADA.  
+   - Digite as palavras-chave para dividir o texto (opcional).  
+   - Escolha o tipo de relatório (TXT, JSON ou ambos).  
+   - Escolha o tipo de log (TXT ou JSON).  
+4. Aguarde a execução.  
+5. Verifique os resultados na pasta **result\**.  
+
+---
+
+### Opção 2: Executar diretamente via linha de comando
 Arquivo único:
 ```bash
-python scripts/text_processing.py --file sample1 --keywords DATA WORD --json --txt
+python scripts/text_processing.py --file ENTRADA/sample1.txt --keywords DATA WORD --txt
 ```
 
 Múltiplos arquivos:
 ```bash
-python scripts/text_processing.py --file sample1 sample2 --keywords DATA KEY --txt
+python scripts/text_processing.py --file ENTRADA/sample1.txt ENTRADA/sample2.txt --keywords DATA KEY --json
 ```
 
-Opções de logging:
+---
+
+### Opções de Logging
 - `--log_json` → logs estruturados em JSON  
-- `--log_txt` → logs em texto simples (default)  
+- `--log_txt` → logs em texto simples (padrão)  
 
 ---
 
 ## 📊 Exemplo de Saída
+
+**Relatório TXT**
+```text
+Report - Text Processing Automation
+Date: 01/06/2026 21:30:00
+Execution time: 0.42 seconds
+
+Summary of processed files:
+- new_sample1.txt: 12 lines, 95 words
+- new_sample2.txt: 8 lines, 60 words
+
+Execution Summary:
+Files processed successfully: 2
+Files failed: 0
+Failed files: None
+
+Notes:
+- All files were cleaned and split by keyword.
+- Reports generated in JSON and TXT formats.
+- Files moved to organized folders.
+- Fallback applied for errors.
+```
 
 **Relatório JSON**
 ```json
@@ -102,37 +153,15 @@ Opções de logging:
 }
 ```
 
-**Relatório TXT**
-```text
-Report - Text Processing Automation
-Date: 01/06/2026 21:30:00
-Execution time: 0.42 seconds
-
-Summary of processed files:
-- new_sample1.txt: 12 lines, 95 words
-- new_sample2.txt: 8 lines, 60 words
-
-Execution Summary:
-Files processed successfully: 2
-Files failed: 0
-Failed files: None
-
-Notes:
-- All files were cleaned and split by keyword.
-- Reports generated in JSON and TXT formats.
-- Files moved to organized folders.
-- Fallback applied for errors.
-```
-
 ---
 
 ## 🧠 Funções Internas (para desenvolvedores)
-- `clean_text()` → Remove linhas em branco e detecta encoding  
-- `split_keywords()` → Divide texto usando múltiplas palavras-chave  
-- `count_lines_words()` → Conta linhas e palavras por arquivo  
-- `generate_report()` → Cria relatórios em JSON/TXT  
-- `save_results()` → Move resultados e logs para a pasta `result/`  
-- `main()` → Controla o pipeline de execução  
+- `clean_text()` → remove linhas em branco e detecta encoding  
+- `split_keywords()` → divide texto usando múltiplas palavras-chave  
+- `count_lines_words()` → conta linhas e palavras por arquivo  
+- `generate_report()` → cria relatórios JSON/TXT  
+- `save_results()` → move resultados e logs para `result/`  
+- `main()` → controla o pipeline de execução  
 
 ---
 

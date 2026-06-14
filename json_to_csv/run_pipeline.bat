@@ -16,14 +16,14 @@ echo %PROJECT_NAME%
 echo ========================================
 echo.
 
-echo Instalando/Atualizando dependencias...
+echo Instalando/Atualizando dependências...
 python -m pip install -r requirements.txt --quiet --disable-pip-version-check
 if %errorlevel% neq 0 (
     color 0C
     echo.
-    echo ERRO: Falha ao instalar dependencias.
-    echo 1. Verifique se Python 3.12+ esta instalado
-    echo 2. Verifique sua conexao com a internet
+    echo ERRO: Falha ao instalar dependências.
+    echo 1. Verifique se Python 3.12+ está instalado
+    echo 2. Verifique sua conexão com a internet
     echo 3. Leia o arquivo LEIAME.txt
     echo.
     pause
@@ -37,11 +37,12 @@ echo %PROJECT_NAME%
 echo ========================================
 echo.
 
-:: Verifica se a pasta ENTRADA existe
-if not exist "ENTRADA\" (
+:: Verifica se há pelo menos um arquivo JSON na pasta ENTRADA
+dir /b "ENTRADA\*.json" >nul 2>&1
+if %errorlevel% neq 0 (
     color 0E
-    echo ERRO: Pasta ENTRADA nao encontrada.
-    echo Crie a pasta ENTRADA e coloque seus arquivos JSON la.
+    echo ERRO: Nenhum arquivo JSON encontrado na pasta ENTRADA.
+    echo Coloque seus arquivos JSON na pasta ENTRADA e tente novamente.
     echo.
     pause
     exit /b
@@ -54,13 +55,13 @@ python launcher.py
 if %errorlevel% neq 0 (
     color 0C
     echo.
-    echo ERRO NA EXECUCAO DO LAUNCHER.
+    echo ERRO NA EXECUÇÃO DO LAUNCHER.
     echo Verifique os logs na pasta result\ ou leia o LEIAME.txt
 ) else (
     color 0A
     echo.
     echo ========================================
-    echo CONCLUIDO! Verifique a pasta result\
+    echo CONCLUÍDO! Verifique a pasta result\
     echo ========================================
 )
 echo.

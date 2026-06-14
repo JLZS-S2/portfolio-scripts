@@ -1,8 +1,8 @@
 # Merge & Filter CSV Pipeline
 
 ## 📌 Visão Geral  
-Este projeto automatiza a junção de múltiplos arquivos CSV em um único dataset.  
-Ele remove duplicados, trata valores nulos, aplica filtros dinâmicos definidos em um arquivo JSON e gera relatórios estruturados em formato JSON e/ou TXT.  
+Este projeto automatiza a junção de múltiplos arquivos **CSV** em um único dataset.  
+Ele remove duplicados, trata valores nulos, aplica filtros dinâmicos definidos em um arquivo JSON e gera relatórios estruturados em **JSON** e/ou **TXT**.  
 O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs estruturados para rastreamento de erros e fluxo de execução.
 
 👉 Em resumo: você fornece arquivos CSV e recebe um CSV limpo/filtrado mais relatórios.
@@ -10,16 +10,16 @@ O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs 
 ---
 
 ## 🚀 Funcionalidades
-- Ler múltiplos arquivos CSV de uma vez  
-- Juntar em um único dataset  
-- Remover duplicados automaticamente  
-- Tratar valores nulos com `"Not Informed"` ou outro valor definido pelo usuário (`--for_NaN`)  
-- Aplicar filtros dinâmicos definidos em `filter.json`  
-- Exportar arquivo CSV final  
-- Geração de relatórios em JSON e TXT  
-- Logging estruturado em TXT ou JSON  
-- Saída organizada na pasta `result/`  
-- Rastreamento de erros com lista detalhada de falhas  
+- **Leitura** de múltiplos arquivos CSV de uma vez  
+- **Junção** em um único dataset  
+- **Remoção de duplicados** automaticamente  
+- **Tratamento de valores nulos** com `"Not Informed"` ou string definida pelo usuário  
+- **Aplicação de filtros** dinâmicos definidos em `filter.json`  
+- **Exportação** do arquivo CSV final  
+- **Relatórios** em JSON e TXT  
+- **Logging estruturado** em TXT ou JSON  
+- **Saída organizada** na pasta `result/`  
+- **Rastreamento de erros** com lista detalhada de falhas  
 
 ---
 
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 ```
 merge_filter_csv/
 ├── scripts/
-│   └── merge_filter_csv.py
+│   ├── merge_filter_csv.py
 │   ├── logging_config.py
 │   ├── logging_txt.py
 │   └── logging_config.json
@@ -57,21 +57,39 @@ merge_filter_csv/
 
 ---
 
+## 🔄 Fluxo do Pipeline
+
+```
++-----------+        +----------------+        +-----------+
+|  ENTRADA  | -----> |   PROCESSO     | -----> |  RESULT     |
+| (CSV)     |        | (merge_filter) |        | (CSV + logs)|
++-----------+        +----------------+        +-----------+
+
+ENTRADA: pasta já criada e entregue vazia
+PROCESSO: junção, remoção de duplicados, filtros, relatórios, logs
+RESULT: CSV final + relatórios + logs
+```
+
+⚠️ Observação:  
+- Se a pasta **ENTRADA** estiver **vazia**, o pipeline não roda.  
+- Este pipeline exige **pelo menos 2 arquivos CSV** para funcionar.  
+
+---
+
 ## ⚙️ Como Executar
 
 ### Opção 1: Usando o menu interativo (`run_pipeline.bat`)
-1. Crie a pasta **ENTRADA** na raiz do projeto.  
-2. Coloque seus arquivos CSV dentro da pasta ENTRADA.  
-3. Clique duas vezes em **run_pipeline.bat**.  
-4. O menu interativo será aberto:  
+1. Coloque seus arquivos CSV dentro da pasta ENTRADA.  
+2. Clique duas vezes em **run_pipeline.bat**.  
+3. O menu interativo será aberto:  
    - Escolha os arquivos CSV dentro de ENTRADA.  
    - Digite o nome do arquivo de saída (padrão: `output.csv`).  
    - Digite a string para substituir valores nulos (`--for_NaN`, padrão: `"Not Informed"`).  
    - Escolha se deseja aplicar filtros do `filter.json`.  
    - Escolha o tipo de relatório (TXT, JSON ou ambos).  
    - Escolha o tipo de log (TXT ou JSON).  
-5. Aguarde a execução.  
-6. Verifique os resultados na pasta **result\**.  
+4. Aguarde a execução.  
+5. Verifique os resultados na pasta **result\**.  
 
 ---
 

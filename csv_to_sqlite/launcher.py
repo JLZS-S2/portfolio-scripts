@@ -1,10 +1,10 @@
-import subprocess
 import os
+import subprocess
 
 def main():
-    print("=== CSV TO SQLITE ===")
-    print("Este menu ajuda você a configurar a execução sem precisar editar arquivos.")
-    print()
+    print("========================================")
+    print("CSV TO SQLITE PIPELINE - MENU INTERATIVO")
+    print("========================================\n")
 
     # Lista todos os arquivos CSV da pasta ENTRADA
     input_folder = "ENTRADA"
@@ -14,9 +14,9 @@ def main():
         print("❌ Nenhum arquivo CSV encontrado na pasta ENTRADA.")
         return
 
-    # Inputs opcionais: se o cliente só apertar Enter, usa o valor padrão
-    null_value = input("Valor para substituir nulos [Não Informado]: ") or "Não Informado"
-    report_type = input("Tipo de relatório (txt/json) [txt]: ").strip().lower() or "txt"
+    # Inputs opcionais
+    null_value = input("Valor para substituir nulos [Não Informado]: ").strip() or "Não Informado"
+    report_type = input("Tipo de relatório (txt/json/ambos) [txt]: ").strip().lower() or "txt"
     log_type = input("Tipo de log (txt/json) [txt]: ").strip().lower() or "txt"
 
     args = [
@@ -27,6 +27,8 @@ def main():
 
     if report_type == "json":
         args.append("--json")
+    elif report_type == "ambos":
+        args.extend(["--json", "--txt"])
     else:
         args.append("--txt")
 
@@ -35,7 +37,17 @@ def main():
     else:
         args.append("--log_txt")
 
-    print("\nExecutando pipeline...")
+    # Resumo das escolhas
+    print("\n========================================")
+    print("RESUMO DAS ESCOLHAS")
+    print("========================================")
+    print(f"Arquivos selecionados: {', '.join([os.path.basename(f) for f in input_files])}")
+    print(f"Substituição de nulos: {null_value}")
+    print(f"Relatório: {report_type}")
+    print(f"Log: {log_type}")
+    print("========================================\n")
+
+    print("🚀 Executando pipeline...\n")
     subprocess.run(args)
 
     print("\n✅ Concluído! Verifique a pasta result/")

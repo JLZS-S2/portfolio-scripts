@@ -39,9 +39,9 @@ pip install -r requirements.txt
 file_automation/
 ├── scripts/
 │   ├── file_automation.py
+│   └── logging_config.json
 │   ├── logging_config.py
 │   ├── logging_txt.py
-│   └── logging_config.json
 ├── requirements.txt
 ├── extension.json
 ├── ENTRADA/
@@ -54,9 +54,27 @@ file_automation/
 │   └── (saídas geradas)
 ├── run_pipeline.bat
 ├── launcher.py
-├── LEIAME.txt
-└── README.md
+└── LEIAME.txt
 ```
+
+---
+
+## 🔄 Fluxo do Pipeline
+
+```
++-----------+        +----------------+        +-----------+
+|  ENTRADA  | -----> |   PROCESSO     | -----> |  RESULT   |
+| (pastas)  |        | (file_automation)|      | (saídas)  |
++-----------+        +----------------+        +-----------+
+
+ENTRADA: pasta já criada e entregue vazia
+PROCESSO: organização, contagem, compactação, relatórios, logs
+RESULT: pasta organizada + ZIP + relatórios + logs
+```
+
+⚠️ Observação:  
+- Se a pasta **ENTRADA** estiver **vazia**, o pipeline não roda.  
+- É necessário haver **ao menos uma pasta desorganizada** dentro de ENTRADA.  
 
 ---
 
@@ -137,7 +155,7 @@ Notes:
 ---
 
 ## 🔒 Tratamento de Erros
-- Detecta pastas ausentes  
+- Detecta pastas ausentes ou vazias  
 - Trata extensões não mapeadas  
 - Rastreia itens com falha  
 - Logs estruturados (`errors.log` ou `errors_txt.log`)  

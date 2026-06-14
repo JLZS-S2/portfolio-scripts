@@ -1,29 +1,27 @@
 # JSON to CSV Automation
 
-## 📌 Visão Geral
+## 📌 Visão Geral  
 Este projeto automatiza a conversão de arquivos **JSON** em um único arquivo **CSV**.  
 Ele valida múltiplos formatos de JSON (padrão, JSONL, dict/list), trata valores nulos e gera relatórios estruturados em **JSON** e/ou **TXT**.  
-O pipeline organiza todos os resultados em uma pasta dedicada `result/` e inclui logs para rastrear erros e o fluxo de execução.
+O pipeline organiza os resultados em uma pasta dedicada `result/` e inclui logs estruturados para rastreamento de erros e fluxo de execução.
 
-👉 Em resumo: você fornece arquivos JSON e recebe um CSV limpo mais relatórios.
+👉 Em resumo: você fornece arquivos JSON e recebe um CSV consolidado mais relatórios.
 
 ---
 
 ## 🚀 Funcionalidades
-- Leitura de múltiplos arquivos JSON de uma vez  
-- Suporte a JSON, JSONL e estruturas dict/list  
-- Detecção automática de codificação com **chardet**  
-- Substituição de valores nulos por `"Not Informed"` (ou valor definido pelo usuário)  
-- Concatenação em um único arquivo CSV  
-- Geração de relatórios em JSON e TXT  
-- Logging estruturado para rastrear execução e erros  
-- Organização automática dos resultados na pasta `result/`  
-- Lista detalhada de arquivos que falharam na leitura  
+- **Validação** de arquivos JSON (padrão, JSONL, dict/list)  
+- **Processamento** dos dados (concatenação em CSV único)  
+- **Tratamento de valores nulos** com `"Not Informed"` ou string definida pelo usuário  
+- **Relatórios** em JSON e TXT  
+- **Logging estruturado** em TXT ou JSON  
+- **Saída organizada** na pasta `result/`  
+- **Rastreamento de erros** com lista detalhada de falhas  
 
 ---
 
 ## 📋 Requisitos
-- Python 3.12+  
+- Windows com Python 3.12+  
 - Dependências listadas em `requirements.txt`  
 
 Instale as dependências:
@@ -34,7 +32,7 @@ pip install -r requirements.txt
 ---
 
 ## 📂 Estrutura do Projeto
-```bash
+```
 json_to_csv/
 ├── scripts/
 │   ├── json_to_csv.py
@@ -42,58 +40,81 @@ json_to_csv/
 │   ├── logging_txt.py
 │   └── logging_config.json
 ├── requirements.txt
-├── ENTRADA/              # Pasta para colocar os arquivos JSON
-├── result/               # Pasta onde os resultados serão salvos
-├── run_pipeline.bat      # Arquivo para iniciar o processo
-├── launcher.py           # Menu interativo
-└── LEIAME.txt            # Instruções rápidas
+├── ENTRADA/
+│   └── (arquivos JSON)
+├── result/
+│   └── (saídas geradas)
+├── run_pipeline.bat
+├── launcher.py
+└── LEIAME.txt
 ```
+
+---
+
+## 🔄 Fluxo do Pipeline
+
+```
++-----------+        +----------------+        +-----------+
+|  ENTRADA  | -----> |   PROCESSO     | -----> |  RESULT     |
+| (JSONs)   |        | (json_to_csv)  |        | (CSV + logs)|
++-----------+        +----------------+        +-----------+
+
+ENTRADA: pasta já criada e entregue vazia
+PROCESSO: validação, concatenação, relatórios, logs
+RESULT: CSV final + relatórios + logs
+```
+
+⚠️ Observação:  
+- Se a pasta **ENTRADA** estiver **vazia**, o pipeline não roda.  
+- Este pipeline funciona com **um ou mais arquivos JSON**.  
 
 ---
 
 ## ⚙️ Como Executar
-Arquivo único:
+
+### Opção 1: Usando o menu interativo (`run_pipeline.bat`)
+1. Coloque seus arquivos JSON dentro da pasta ENTRADA.  
+2. Clique duas vezes em **run_pipeline.bat**.  
+3. O menu interativo será aberto:  
+   - Escolha os arquivos dentro de ENTRADA.  
+   - Digite o nome do arquivo CSV de saída (padrão: `Merge.csv`).  
+   - Digite a string para substituir valores nulos (`--for_NaN`, padrão: `"Not Informed"`).  
+   - Escolha o tipo de relatório (TXT, JSON ou ambos).  
+   - Escolha o tipo de log (TXT ou JSON).  
+4. Aguarde a execução.  
+5. Verifique os resultados na pasta **result\**.  
+
+---
+
+### Opção 2: Executar diretamente via linha de comando
 ```bash
-python scripts/json_to_csv.py --json_files data1 --output_csv output.csv --json --txt
+python scripts/json_to_csv.py --json_files ENTRADA/data1.json ENTRADA/data2.json --output_csv resultado.csv --txt
 ```
 
-Múltiplos arquivos:
+Com relatório JSON:
 ```bash
-python scripts/json_to_csv.py --json_files data1 data2 data3 --output_csv clientes.csv --txt
+python scripts/json_to_csv.py --json_files ENTRADA/data.json --output_csv resultado.csv --json
 ```
 
-Opções de logging:
-- **--log_json** → logs estruturados em JSON  
-- **--log_txt** → logs em texto simples (default)  
+---
+
+### Opções de Logging
+- `--log_json` → logs estruturados em JSON  
+- `--log_txt` → logs em texto simples (padrão)  
 
 ---
 
 ## 📊 Exemplo de Saída
-Relatório JSON:
-```json
-{
-  "report_title": "Report - JSON to CSV Automation",
-  "date": "26/05/2026 15:40:00",
-  "execution_time_seconds": 0.35,
-  "files_success": 3,
-  "files_failed": 0,
-  "failed_list": [],
-  "notes": [
-    "JSON files processed and concatenated.",
-    "Null values handled.",
-    "Final CSV generated successfully."
-  ]
-}
-```
 
-Relatório TXT:
+**Relatório TXT**
 ```text
 Report - JSON to CSV Automation
-Date: 26/05/2026 15:40:00
+Date: 14/06/2026 14:20:00
 Execution time: 0.35 seconds
 
-Files processed successfully: 3
-Files failed: 0
+Execution Summary:
+Success: 3
+Failures: 0
 Failed files: None
 
 Notes:
@@ -102,20 +123,39 @@ Notes:
 - Final CSV generated successfully.
 ```
 
+**Relatório JSON**
+```json
+{
+  "report_title": "Report - JSON to CSV Automation",
+  "date": "14/06/2026 14:20:00",
+  "execution_time_seconds": 0.35,
+  "summary": {
+    "success": 3,
+    "failures": 0,
+    "failed_list": []
+  },
+  "notes": [
+    "JSON files processed and concatenated.",
+    "Null values handled.",
+    "Final CSV generated successfully."
+  ]
+}
+```
+
 ---
 
 ## 🧠 Funções Internas (para desenvolvedores)
-- **open_json()** → Abre e valida arquivos JSON com estratégias de fallback  
-- **handle_null_values()** → Substitui valores nulos por `"Not Informed"`  
-- **generate_report()** → Cria relatórios em JSON/TXT  
-- **save_results()** → Move resultados e logs para a pasta `result/`  
-- **main()** → Controla o pipeline de execução  
+- `open_json()` → valida e abre arquivos JSON  
+- `handle_null_values()` → substitui valores nulos  
+- `generate_report()` → cria relatórios JSON/TXT  
+- `save_results()` → move resultados e logs para `result/`  
+- `main()` → controla o pipeline de execução  
 
 ---
 
 ## 🔒 Tratamento de Erros
 - Detecta erros de codificação com **chardet**  
-- Lida com formatos inválidos de JSON (padrão, JSONL, dict/list)  
+- Lida com formatos inválidos de JSON  
 - Rastreia arquivos que falharam com logging detalhado  
 - Logs estruturados (`errors_json.log` ou `errors_txt.log`)  
 - Logging crítico quando todos os arquivos falham  
@@ -132,23 +172,21 @@ Notes:
 
 ---
 
-## ✅ Resultado Final
+## ✅ Resultado Final  
 Este projeto é ideal para:
-- Pipelines de conversão de dados  
-- Validação de JSONs  
-- Geração de CSVs consolidados  
+- Conversão de JSONs em CSV  
+- Consolidação de múltiplos arquivos em um único dataset  
 - Automação de relatórios  
 - Processamento em lote com rastreamento de erros  
 
 ---
 
 ## 🔎 Observações & Recomendações
-- **Detecção de encoding**: o chardet pode ser impreciso em arquivos muito pequenos.  
+- **Detecção de encoding**: pode ser imprecisa em arquivos muito pequenos.  
 - **Concatenação**: JSONs com estruturas diferentes geram muitas colunas com nulos.  
-- **save_results**: sobrescreve arquivos se já existirem na pasta `result/`. Adicione timestamps se precisar de versionamento.  
-- **Validação de schema**: não é aplicada. Adicione verificações se precisar de consistência entre JSONs.  
-- **Duplicados**: não são removidos. Use `drop_duplicates()` se necessário.  
-- **Exit codes**: não diferenciados. Adicionar `sys.exit(0/1)` pode melhorar integração com CI/CD.  
+- **save_results**: sobrescreve arquivos se já existirem em `result/`. Adicione timestamps se precisar de versionamento.  
+- **Validação de schema**: não é aplicada; adicione verificações se precisar de consistência entre JSONs.  
+- **Exit codes**: atualmente não diferenciados. Adicionar `sys.exit(0/1)` melhora integração com CI/CD.  
 - **Performance**: para grandes volumes de JSONs, considere usar chunks do Pandas para otimizar memória.  
 
 ---

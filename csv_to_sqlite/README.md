@@ -1,3 +1,5 @@
+---
+
 # CSV to SQLite Pipeline
 
 ## 📌 Visão Geral  
@@ -37,18 +39,13 @@ pip install -r requirements.txt
 csv_to_sqlite/
 ├── scripts/
 │   ├── csv_to_sqlite.py
+│   ├── logging_config.json
 │   ├── logging_config.py
 │   ├── logging_txt.py
-│   ├── logging_config.json
-│   └── __pycache__/
 ├── ENTRADA/
-│   └── data.csv
+│   └── (arquivos CSV)
 ├── result/
-│   ├── report.json
-│   ├── report.txt
-│   ├── data.db
-│   ├── process_txt.log
-│   └── errors_txt.log
+│   └── (saídas geradas)
 ├── launcher.py
 ├── run_pipeline.bat
 ├── requirements.txt
@@ -57,13 +54,30 @@ csv_to_sqlite/
 
 ---
 
+## 🔄 Fluxo do Pipeline
+
+```
++-----------+        +----------------+        +-----------+
+|  ENTRADA  | -----> |   PROCESSO     | -----> |  RESULT   |
+| (arquivos)|        | (csv_to_sqlite)|        | (saídas)  |
++-----------+        +----------------+        +-----------+
+
+ENTRADA: pasta já criada e entregue vazia
+PROCESSO: validação, limpeza, importação, relatórios, logs
+RESULT: banco SQLite + relatórios + logs
+```
+
+⚠️ Observação:  
+- Se a pasta **ENTRADA** estiver **vazia**, o pipeline não roda.  
+---
+
 ## ⚙️ Como Executar
 1. Coloque seus arquivos CSV dentro da pasta `ENTRADA/`.  
 2. Dê duplo clique em `run_pipeline.bat`.  
 3. O launcher pedirá opções de personalização:
    - Valor para substituir nulos (padrão: `"Not Informed"`)  
-   - Tipo de relatório (`txt` padrão, ou `json`)  
-   - Tipo de log (`txt` padrão, ou `json`)  
+   - Tipo de relatório (`txt`, `json` ou `ambos`)  
+   - Tipo de log (`txt` ou `json`)  
    - Se você apenas apertar **Enter**, os valores padrão serão usados.  
 
 ---

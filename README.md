@@ -19,32 +19,37 @@ Todos com `.bat` executável: o cliente só clica e roda. Zero terminal.
 **O que faz:** Extrai tabelas e texto de PDFs direto para `.csv` limpo.  
 **Benefício:** Elimina copiar e colar manual de relatórios.  
 **Docs:** [/pdf_to_csv/README.md](/pdf_to_csv/README.md) 
-**Downloads:** [⬇️ PDF to CSV V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/pdf_to_csv.v1.0/PDF_TO_CSV_v1.0.zip)
+**Downloads:** [⬇️ PDF_TO_CSV_V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/pdf_to_csv_v1.0/PDF_TO_CSV_v1.0.zip)
 
 ### 3. JSON to CSV
 **O que faz:** Valida, concatena e converte múltiplos `.json` em `.csv` único.  
 **Benefício:** Junta respostas de API em planilha sem abrir código.  
 **Docs:** [/json_to_csv/README.md](/json_to_csv/README.md)
+**Downloads:** [⬇️ JSON_TO_CSV_V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/json_to_csv_v1.0/JSON_TO_CSV_v1.0.zip)
 
 ### 4. File Organizer
 **O que faz:** Organiza arquivos por extensão em subpastas, move ou copia conforme configuração, gera relatórios e compacta resultados em `.zip`.  
 **Benefício:** Estrutura automaticamente pastas bagunçadas, com contagem de arquivos e logs para auditoria.  
 **Docs:** [/file_automation/README.md](/file_automation/README.md)
+**Downloads:** [⬇️ FILE_ORGANIZER_V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/file_automation_v1.0/FILE_ORGANIZER_v1.0.zip)
 
 ### 5. Merge & Filter CSV
 **O que faz:** Junta múltiplos `.csv`, remove duplicados e aplica filtros dinâmicos via `filter.json`.  
 **Benefício:** Cria datasets filtrados sem precisar abrir Excel.  
 **Docs:** [/merge_filter_csv/README.md](/merge_filter_csv/README.md)
+**Downloads:** [⬇️ MERGE_&_FILTER_CSV_V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/merge_filter_csv_v1.0/MERGE_FILTER_CSV_v1.0.zip)
 
 ### 6. Text Processing
 **O que faz:** Limpa `.txt`, remove linhas em branco, divide por palavras-chave e conta linhas/palavras.  
 **Benefício:** Processa relatórios textuais em segundos.  
 **Docs:** [/text_processing/README.md](/text_processing/README.md)
+**Downloads:** [⬇️ TEXT_PROCESSING_V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/text_processing_v1.0/TEXT_PROCESSING_v1.0.zip)
 
 ### 7. Weather Data
 **O que faz:** Integra com API OpenWeather, coleta dados de cidades e exporta para `.csv` e `.json`.  
 **Benefício:** Relatórios meteorológicos prontos para análise.  
 **Docs:** [/weather_pipeline/README.md](/weather_pipeline/README.md)
+**Downloads:** [⬇️ WEATHER DATA V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/weather_pipeline_v1.0/WEATHER_PIPELINE_v1.0.zip)
 
 *Cada pasta tem `run_pipeline.bat`, `launcher.py`, `LEIAME.txt` e `requirements.txt`. É baixar e rodar.  
 E, sob demanda, posso entregar cada projeto como `.exe` para máxima praticidade.*

@@ -18,7 +18,8 @@ Todos com `.bat` executável: o cliente só clica e roda. Zero terminal.
 ### 2. PDF to CSV
 **O que faz:** Extrai tabelas e texto de PDFs direto para `.csv` limpo.  
 **Benefício:** Elimina copiar e colar manual de relatórios.  
-**Docs:** [/pdf_to_csv/README.md](/pdf_to_csv/README.md)
+**Docs:** [/pdf_to_csv/README.md](/pdf_to_csv/README.md) 
+**Downloads:** [⬇️ PDF to CSV V1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/pdf_to_csv.v1.0/PDF_TO_CSV_v1.0.zip)
 
 ### 3. JSON to CSV
 **O que faz:** Valida, concatena e converte múltiplos `.json` em `.csv` único.  

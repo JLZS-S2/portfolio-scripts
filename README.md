@@ -13,6 +13,7 @@ Todos com `.bat` executável: o cliente só clica e roda. Zero terminal.
 **O que faz:** Converte `.csv` em banco `.sqlite` automaticamente. Remove duplicatas, trata nulos, gera relatório `.txt` ou `.json`.  
 **Benefício:** Em segundos, você tem um banco pronto para análise.  
 **Docs:** [/csv_to_sqlite/README.md](/csv_to_sqlite/README.md)
+**Downloads:** [⬇️ CSV_TO_SQLITE_v1.0.zip](https://github.com/JLZS-S2/portfolio-scripts/releases/download/csv_to_sqlite_v1.0/CSV_TO_SQLITE_v1.0.zip)
 
 ### 2. PDF to CSV
 **O que faz:** Extrai tabelas e texto de PDFs direto para `.csv` limpo.  
